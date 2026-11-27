@@ -1,103 +1,169 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f5c4d"><link rel="icon" href="icon-192.png"><title>بهداری FAC – ثبت مراجعات HSE</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a3d33"><link rel="icon" href="icon-192.png">
+<title>بهداری FAC – ثبت مراجعات HSE</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#eef3f2;--card:#fff;--tx:#14201e;--mut:#5d6f6b;--pri:#0f5c4d;--pri2:#0a3d33;--acc:#f2a900;--bd:#d3dedb;--ok:#e3f1ee;--bad:#c0392b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1716;--card:#162321;--tx:#e6efed;--mut:#93a8a3;--pri:#2fa88f;--pri2:#0a3d33;--bd:#2b3f3b;--ok:#1b3a35}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1716;--card:#162321;--tx:#e6efed;--mut:#93a8a3;--pri:#2fa88f;--pri2:#0a3d33;--bd:#2b3f3b;--ok:#1b3a35}
+:root{box-sizing:border-box;--bg:#eef3f2;--card:#fff;--tx:#14201e;--mut:#5d6f6b;--pri:#0f5c4d;--pri2:#0a3d33;--acc:#f2a900;--bd:#d3dedb;--ok:#e3f1ee;--bad:#c0392b;--fld:#f6faf9;--sh:0 2px 10px rgba(10,61,51,.08)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1716;--card:#162321;--tx:#e6efed;--mut:#93a8a3;--pri:#2fa88f;--pri2:#0a3d33;--bd:#2b3f3b;--ok:#1b3a35;--fld:#0f1b19;--sh:none}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--tx);font:14px Tahoma,Arial,sans-serif}
-*{box-sizing:border-box}
-header{background:linear-gradient(135deg,var(--pri2),#0f5c4d);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center;border-bottom:4px solid var(--acc)}
-.logo{width:42px;height:42px;border-radius:10px;background:#fff;display:grid;place-items:center;flex:none}
-header h1{font-size:16px;margin:0}header small{opacity:.85;font-size:11px}
-main{padding:12px 12px 90px;max-width:760px;margin:auto}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
-h2{font-size:14px;margin:0 0 10px;color:var(--pri);border-right:4px solid var(--acc);padding-right:8px}
-label{display:block;font-size:12px;color:var(--mut);margin:8px 0 3px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-button{font:inherit;border:0;border-radius:10px;padding:11px 14px;background:var(--pri);color:#fff;font-weight:bold;cursor:pointer}
+.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--pri2),#0f5c4d 70%,#16806b);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--acc);box-shadow:0 3px 12px rgba(0,0,0,.18)}
+.logo{width:38px;height:38px;border-radius:11px;background:#fff;display:grid;place-items:center;flex:none}
+.top h1{font-size:15px;margin:0;line-height:1.3}.top small{opacity:.8;font-size:10.5px}
+.burger{margin-right:auto;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.14);border:0;display:grid;place-items:center;padding:0}
+.burger span,.burger span:before,.burger span:after{display:block;width:20px;height:2.5px;background:#fff;border-radius:2px;position:relative;content:""}
+.burger span:before{position:absolute;top:-6.5px}.burger span:after{position:absolute;top:6.5px}
+main{padding:14px 12px calc(30px + env(safe-area-inset-bottom,0px));max-width:760px;margin:auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:var(--sh)}
+h2{font-size:14px;margin:0 0 4px;color:var(--pri);display:flex;align-items:center;gap:8px}
+h2:before{content:"";width:5px;height:18px;border-radius:3px;background:var(--acc)}
+.sub{font-size:11px;color:var(--mut);margin:0 0 6px}
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--bd);border-radius:11px;background:var(--fld);color:var(--tx);font:inherit;outline:0;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(15,92,77,.15)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dwrap{position:relative}.dwrap svg{position:absolute;left:11px;top:50%;margin-top:-9px;pointer-events:none;stroke:var(--pri)}
+#date{cursor:pointer;padding-left:36px;font-weight:bold}
+button{font:inherit;border:0;border-radius:12px;padding:12px 14px;background:var(--pri);color:#fff;font-weight:bold;cursor:pointer}
+button:active{transform:scale(.98)}
 button.s{background:var(--ok);color:var(--pri)}button.d{background:transparent;color:var(--bad);padding:4px 8px}
-.row{display:flex;gap:8px}.row>*{flex:1}
-nav{position:fixed;bottom:0;right:0;left:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;background:none;color:var(--mut);border-radius:0;font-size:11px;padding:9px 2px}
-nav button.on{color:var(--pri);box-shadow:inset 0 3px 0 var(--acc)}
-.mr{display:grid;grid-template-columns:1fr 80px 36px;gap:6px;margin-top:6px}
+.big{width:100%;margin-top:14px;padding:14px;font-size:15px;background:linear-gradient(135deg,#0f5c4d,#16806b)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.mr{display:grid;grid-template-columns:1fr 84px 38px;gap:6px;margin-top:6px}
 .sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}
-th{background:var(--pri2);color:#fff;padding:7px;white-space:nowrap}td{border:1px solid var(--bd);padding:6px;text-align:center}
-.rec{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:var(--card)}
-.rec b{color:var(--pri)}.rec p{margin:4px 0;color:var(--mut);font-size:12px}
-.kpi{display:flex;gap:8px;margin-bottom:10px}.kpi div{flex:1;background:var(--ok);border-radius:10px;padding:10px;text-align:center;color:var(--pri);font-size:11px}.kpi b{display:block;font-size:20px}
-.toast{position:fixed;top:70px;right:50%;transform:translateX(50%);background:var(--pri2);color:#fff;padding:10px 16px;border-radius:20px;display:none;z-index:9}
-.v{display:none}.v.on{display:block}
+th{background:var(--pri2);color:#fff;padding:8px;white-space:nowrap}td{border:1px solid var(--bd);padding:7px;text-align:center}
+.rec{border:1px solid var(--bd);border-right:5px solid var(--pri);border-radius:12px;padding:10px 12px;margin-bottom:9px;background:var(--card)}
+.rec b{color:var(--pri);font-size:14px}.rec p{margin:4px 0;color:var(--mut);font-size:12px}
+.chip{display:inline-block;background:var(--ok);color:var(--pri);border-radius:20px;padding:2px 9px;font-size:11px;margin:2px 0 2px 4px}
+.kpi{display:flex;gap:10px;margin-bottom:12px}.kpi div{flex:1;background:var(--ok);border-radius:14px;padding:12px;text-align:center;color:var(--pri);font-size:11px;border-bottom:3px solid var(--acc)}.kpi b{display:block;font-size:24px}
+.toast{position:fixed;top:80px;right:50%;transform:translateX(50%);background:var(--pri2);color:#fff;padding:11px 18px;border-radius:24px;display:none;z-index:99;box-shadow:0 4px 14px rgba(0,0,0,.3);max-width:90%;text-align:center}
+.v{display:none}.v.on{display:block;animation:fi .25s}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+/* drawer */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s;z-index:40}.ov.on{opacity:1;pointer-events:auto}
+.drw{position:fixed;top:0;bottom:0;left:0;width:78%;max-width:310px;background:var(--card);z-index:50;transform:translateX(-105%);transition:transform .28s;display:flex;flex-direction:column;box-shadow:6px 0 24px rgba(0,0,0,.3)}.drw.on{transform:none}
+.dh{background:linear-gradient(160deg,var(--pri2),#16806b);color:#fff;padding:calc(22px + env(safe-area-inset-top,0px)) 18px 18px;border-bottom:4px solid var(--acc)}
+.dh .logo{width:52px;height:52px;margin-bottom:10px}.dh b{font-size:15px;display:block}.dh small{opacity:.8;font-size:11px}
+.dn{padding:10px;flex:1;overflow:auto}.dn button{width:100%;display:flex;align-items:center;gap:12px;background:none;color:var(--tx);text-align:right;padding:13px 12px;border-radius:12px;margin-bottom:4px;font-weight:normal;font-size:14px}
+.dn button svg{stroke:var(--pri);flex:none}.dn button.on{background:var(--ok);color:var(--pri);font-weight:bold;box-shadow:inset -4px 0 0 var(--acc)}
+.bd{margin-right:auto;background:var(--acc);color:#222;border-radius:12px;padding:1px 8px;font-size:11px;font-weight:bold}
+.df{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));font-size:11px;color:var(--mut);border-top:1px solid var(--bd)}
+/* calendar */
+.dpo{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:80;padding:16px}.dpo.on{display:flex}
+.dp{background:var(--card);border-radius:20px;width:100%;max-width:340px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.dpt{background:linear-gradient(135deg,var(--pri2),#16806b);color:#fff;padding:12px 14px}.dpt small{opacity:.8;font-size:11px}.dpt b{display:block;font-size:20px;margin-top:2px}
+.dpn{display:flex;gap:6px;align-items:center;padding:10px 10px 4px}.dpn select{padding:8px;font-size:13px;flex:1}.dpn button{padding:8px 12px;font-size:16px;background:var(--ok);color:var(--pri)}
+.dg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:6px 10px}.dg i{font-style:normal;text-align:center;font-size:11px;color:var(--mut);padding:5px 0}
+.dg button{padding:0;height:38px;background:none;color:var(--tx);font-weight:normal;border-radius:50%}.dg button.f{color:var(--bad)}
+.dg button.t{box-shadow:inset 0 0 0 2px var(--acc)}.dg button.sel{background:var(--pri);color:#fff;font-weight:bold}
+.dpf{display:flex;gap:8px;padding:8px 12px 12px}.dpf button{flex:1;padding:10px}
+.pdfmode{--card:#fff;--tx:#14201e;--mut:#5d6f6b;--pri:#0f5c4d;--bd:#d3dedb;--ok:#e3f1ee;--fld:#fff;color:#14201e}
 </style></head><body>
-<header><div class="logo"><svg width="28" height="28" viewBox="0 0 24 24"><path fill="#0f5c4d" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></div>
-<div><h1>بهداری FAC — ثبت مراجعات کمک‌های اولیه</h1><small>HSE | آسیب جزئی، بدون نیاز به استراحت بیش از ۱ روز</small></div></header>
-<main>
-<section id="v-add" class="v on"><div class="card"><h2>ثبت مراجعه جدید</h2>
-<div class="g2"><div><label>تاریخ (شمسی)</label><input id="date" inputmode="numeric"></div><div><label>ساعت مراجعه</label><input id="time" type="time"></div></div>
-<label>نام و نام خانوادگی</label><input id="name"><div class="g2"><div><label>سن</label><input id="age" type="number" inputmode="numeric"></div><div><label>بلوک</label><input id="block" list="dl-block"></div></div>
-<label>محل وقوع</label><input id="loc"><label>نوع آسیب</label><input id="injury" list="dl-injury"><label>علت آسیب</label><input id="cause" list="dl-cause">
-<label>شرح جزئی رویداد</label><textarea id="desc" rows="2"></textarea><label>خدمات انجام شده</label><input id="svc" list="dl-svc">
-<label>مواد مصرفی</label><div id="mrows"></div><button class="s" style="margin-top:8px;width:100%" onclick="addMr()">＋ افزودن ماده</button>
-<button style="width:100%;margin-top:12px" onclick="save()">ذخیره مراجعه</button></div></section>
+<div class="top"><div class="logo"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#0f5c4d" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></div>
+<div><h1 id="pt">ثبت مراجعه</h1><small>بهداری FAC | HSE</small></div>
+<button class="burger" aria-label="منو" onclick="drw(1)"><span></span></button></div>
 
-<section id="v-list" class="v"><div class="card"><h2>سوابق مراجعات</h2><input id="q" placeholder="جستجوی نام، آسیب، بلوک…" oninput="list()"><div id="recs" style="margin-top:10px"></div></div></section>
+<div class="ov" id="ov" onclick="drw(0)"></div>
+<aside class="drw" id="drw"><div class="dh"><div class="logo"><svg width="32" height="32" viewBox="0 0 24 24"><path fill="#0f5c4d" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></div><b>بهداری FAC</b><small>ثبت مراجعات و گزارش مصرف کمک‌های اولیه</small></div>
+<div class="dn">
+<button class="on" data-v="add" data-t="ثبت مراجعه"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>ثبت مراجعه جدید</button>
+<button data-v="list" data-t="سوابق مراجعات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>سوابق مراجعات<span class="bd" id="bg">0</span></button>
+<button data-v="rep" data-t="گزارش مصرف"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>گزارش مصرف مواد</button>
+<button data-v="mat" data-t="مواد و لیست‌ها"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg>مواد و لیست‌های پایه</button></div>
+<div class="df">آسیب جزئی • کمک‌های اولیه • بدون استراحت بیش از ۱ روز</div></aside>
+
+<main>
+<section id="v-add" class="v on"><div class="card"><h2>مشخصات مراجعه‌کننده</h2><p class="sub">اطلاعات فرد و زمان مراجعه</p>
+<label>تاریخ مراجعه (شمسی)</label><div class="dwrap"><input id="date" readonly placeholder="انتخاب تاریخ" onclick="dpOpen()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+<div class="g2"><div><label>ساعت مراجعه</label><input id="time" type="time"></div><div><label>سن</label><input id="age" type="number" inputmode="numeric"></div></div>
+<label>نام و نام خانوادگی</label><input id="name"></div>
+<div class="card"><h2>رویداد و آسیب</h2><p class="sub">محل، نوع و علت آسیب</p>
+<div class="g2"><div><label>بلوک</label><input id="block" list="dl-block"></div><div><label>محل وقوع</label><input id="loc"></div></div>
+<label>نوع آسیب</label><input id="injury" list="dl-injury"><label>علت آسیب</label><input id="cause" list="dl-cause">
+<label>شرح جزئی رویداد</label><textarea id="desc" rows="2"></textarea></div>
+<div class="card"><h2>خدمات و مواد مصرفی</h2><p class="sub">اقدامات انجام‌شده و مواد استفاده‌شده</p>
+<label>خدمات انجام شده</label><input id="svc" list="dl-svc"><label>مواد مصرفی</label><div id="mrows"></div>
+<button class="s" style="margin-top:8px;width:100%" onclick="addMr()">＋ افزودن ماده</button></div>
+<button class="big" onclick="save()">✔ ذخیره مراجعه</button></section>
+
+<section id="v-list" class="v"><div class="card"><h2>سوابق مراجعات</h2><input id="q" placeholder="جستجوی نام، آسیب، بلوک…" oninput="list()" style="margin-top:8px"><div id="recs" style="margin-top:12px"></div></div></section>
 
 <section id="v-rep" class="v"><div class="card"><h2>گزارش مصرف مواد</h2>
 <div class="g2"><div><label>سال</label><select id="ry" onchange="rep()"></select></div><div><label>ماه</label><select id="rm" onchange="rep()"></select></div></div>
-<div id="rep" style="margin-top:10px;background:var(--card)"></div>
-<div class="row" style="margin-top:12px"><button onclick="xl()">خروجی Excel</button><button onclick="pdf()">خروجی PDF</button></div></div></section>
+<div id="rep" style="margin-top:12px;background:var(--card)"></div>
+<div class="row" style="margin-top:14px"><button onclick="xl()">⬇ خروجی Excel</button><button onclick="pdf()">⬇ خروجی PDF</button></div></div></section>
 
 <section id="v-mat" class="v"><div class="card"><h2>فهرست مواد کمک‌های اولیه</h2>
-<div class="mr" style="grid-template-columns:1fr 90px 60px"><input id="mn" placeholder="نام ماده"><input id="mu" placeholder="واحد"><button onclick="addMat()">＋</button></div><div id="mats" style="margin-top:8px"></div></div>
-<div class="card"><h2>لیست‌های پایه (هر مورد در یک خط)</h2><div id="lists"></div></div></section>
+<div class="mr" style="grid-template-columns:1fr 90px 52px;margin-top:10px"><input id="mn" placeholder="نام ماده"><input id="mu" placeholder="واحد"><button onclick="addMat()">＋</button></div><div id="mats" style="margin-top:8px"></div></div>
+<div class="card"><h2>لیست‌های پایه</h2><p class="sub">هر مورد در یک خط</p><div id="lists"></div></div></section>
 </main>
+
+<div class="dpo" id="dpo" onclick="if(event.target==this)dpClose()"><div class="dp"><div class="dpt"><small>تاریخ انتخاب‌شده</small><b id="dpv"></b></div>
+<div class="dpn"><button onclick="dpMove(-1)">›</button><select id="dpm" onchange="dp.m=+this.value;dpR()"></select><select id="dpy" onchange="dp.y=+this.value;dpR()"></select><button onclick="dpMove(1)">‹</button></div>
+<div class="dg" id="dpg"></div><div class="dpf"><button class="s" onclick="dpToday()">امروز</button><button class="s" onclick="dpClose()">انصراف</button></div></div></div>
 <div class="toast" id="toast"></div>
-<nav><button class="on" data-v="add">ثبت</button><button data-v="list">سوابق</button><button data-v="rep">گزارش</button><button data-v="mat">مواد و لیست‌ها</button></nav>
 <datalist id="dl-block"></datalist><datalist id="dl-injury"></datalist><datalist id="dl-cause"></datalist><datalist id="dl-svc"></datalist>
 <script src="lib/xlsx.full.min.js"></script>
 <script src="lib/html2canvas.min.js"></script>
 <script src="lib/jspdf.umd.min.js"></script>
 <script>
-const $=id=>document.getElementById(id),MONTHS=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+const $=id=>document.getElementById(id),MONTHS=["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],WD=["ش","ی","د","س","چ","پ","ج"];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fa=n=>String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d]);
 const mem={};const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):(mem[k]??d)}catch(e){return mem[k]??d}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const DEF={injury:["بریدگی","خراشیدگی / سایش","کوفتگی","سوختگی سطحی","جسم خارجی در چشم","پیچ‌خوردگی خفیف","تماس با مواد شیمیایی","فرو رفتن جسم خارجی"],
 cause:["برخورد با جسم سخت","لغزش / سقوط","گیر کردن دست یا انگشت","پرتاب ذرات","تماس با سطح داغ","تماس با مواد شیمیایی","ابزار دستی","ابزار برقی","حمل بار","لبه تیز"],
 block:["بلوک A","بلوک B","بلوک C","بلوک D","محوطه"],svc:["شست‌وشوی زخم","ضدعفونی و پانسمان","بانداژ","شست‌وشوی چشم","کمپرس سرد","آتل‌بندی موقت"]};
 const LN={injury:"نوع آسیب",cause:"علت آسیب",block:"بلوک",svc:"خدمات"};
 let L=st.get("lists",DEF),M=st.get("mats",[["باند پانسمان","عدد"],["گاز استریل","بسته"],["چسب زخم","عدد"],["پنبه","بسته"],["بتادین","میلی‌لیتر"],["سرم شستشو","میلی‌لیتر"],["قطره چشم تتراکایین","قطره"],["پماد سوختگی","لوله"],["آتل","عدد"],["دستکش یکبار مصرف","جفت"]]),R=st.get("recs",[]);
-function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",2500)}
+function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)}
+/* ---- Jalali calendar ---- */
+const div=(a,b)=>Math.trunc(a/b),mod=(a,b)=>a-b*Math.trunc(a/b),BR=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];
+function jalCal(jy){let gy=jy+621,lj=-14,jp=BR[0],jump=0;for(let i=1;i<BR.length;i++){const jm=BR[i];jump=jm-jp;if(jy<jm)break;lj+=div(jump,33)*8+div(mod(jump,33),4);jp=jm}
+let n=jy-jp;lj+=div(n,33)*8+div(mod(n,33)+3,4);if(mod(jump,33)===4&&jump-n===4)lj++;const lg=div(gy,4)-div((div(gy,100)+1)*3,4)-150,march=20+lj-lg;if(jump-n<6)n=n-jump+div(jump+4,33)*33;let leap=mod(mod(n+1,33)-1,4);if(leap===-1)leap=4;return{leap,gy,march}}
+function g2d(gy,gm,gd){let d=div((gy+div(gm-8,6)+100100)*1461,4)+div(153*mod(gm+9,12)+2,5)+gd-34840408;return d-div(div(gy+100100+div(gm-8,6),100)*3,4)+752}
+function j2d(jy,jm,jd){const r=jalCal(jy);return g2d(r.gy,3,r.march)+(jm-1)*31-div(jm,7)*(jm-7)+jd-1}
+const mlen=(y,m)=>m<=6?31:m<=11?30:(jalCal(y).leap===0?30:29),wday=(y,m,d)=>(j2d(y,m,d)%7+2)%7;
+const p2=n=>String(n).padStart(2,"0");
 function today(){const p=new Intl.DateTimeFormat("en-u-ca-persian-nu-latn",{year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date()),g=t=>p.find(x=>x.type===t).value;return g("year")+"/"+g("month")+"/"+g("day")}
-const nd=s=>String(s).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/-/g,"/");
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x==b));document.querySelectorAll(".v").forEach(v=>v.classList.toggle("on",v.id=="v-"+b.dataset.v));if(b.dataset.v=="list")list();if(b.dataset.v=="rep")rep();scrollTo(0,0)});
+let dp={y:0,m:0,d:0};
+function dpOpen(){const v=$("date").value||today(),[y,m,d]=v.split("/").map(Number);dp={y,m,d};const ys=[];for(let i=1395;i<=1430;i++)ys.push(i);
+$("dpy").innerHTML=ys.map(i=>`<option value="${i}">${fa(i)}</option>`).join("");$("dpm").innerHTML=MONTHS.map((n,i)=>`<option value="${i+1}">${n}</option>`).join("");dpR();$("dpo").classList.add("on")}
+function dpClose(){$("dpo").classList.remove("on")}
+function dpMove(k){dp.m+=k;if(dp.m>12){dp.m=1;dp.y++}if(dp.m<1){dp.m=12;dp.y--}dpR()}
+function dpR(){const{y,m,d}=dp,n=mlen(y,m),f=wday(y,m,1),t=today();if(d>n)dp.d=n;$("dpy").value=y;$("dpm").value=m;
+let h=WD.map(w=>`<i>${w}</i>`).join("")+"<i></i>".repeat(f);for(let i=1;i<=n;i++){const k=y+"/"+p2(m)+"/"+p2(i),c=[(f+i-1)%7==6?"f":"",k==t?"t":"",i==dp.d&&$("date").value==k?"sel":""].join(" ");h+=`<button class="${c}" onclick="dpPick(${i})">${fa(i)}</button>`}
+$("dpg").innerHTML=h;const cur=$("date").value;$("dpv").textContent=cur?fa(cur.split("/")[2]*1)+" "+MONTHS[cur.split("/")[1]-1]+" "+fa(cur.split("/")[0]):"—"}
+function dpPick(i){$("date").value=dp.y+"/"+p2(dp.m)+"/"+p2(i);dpClose()}
+function dpToday(){$("date").value=today();dpClose()}
+/* ---- navigation ---- */
+function drw(o){$("drw").classList.toggle("on",!!o);$("ov").classList.toggle("on",!!o)}
+document.querySelectorAll(".dn button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".dn button").forEach(x=>x.classList.toggle("on",x==b));document.querySelectorAll(".v").forEach(v=>v.classList.toggle("on",v.id=="v-"+b.dataset.v));$("pt").textContent=b.dataset.t;if(b.dataset.v=="list")list();if(b.dataset.v=="rep")rep();drw(0);scrollTo(0,0)});
 function dls(){for(const k in LN)$("dl-"+k).innerHTML=L[k].map(x=>`<option value="${esc(x)}">`).join("")}
 function addMr(n="",q=""){const d=document.createElement("div");d.className="mr";d.innerHTML=`<select><option value="">ماده…</option>${M.map(m=>`<option ${m[0]==n?"selected":""}>${esc(m[0])}</option>`).join("")}</select><input type="number" step="any" inputmode="decimal" placeholder="تعداد" value="${q}"><button class="d" onclick="this.parentNode.remove()">✕</button>`;$("mrows").appendChild(d)}
-function reset(){["name","age","block","loc","injury","cause","desc","svc"].forEach(i=>$(i).value="");$("date").value=today();const n=new Date();$("time").value=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");$("mrows").innerHTML="";addMr()}
-function save(){const date=nd($("date").value.trim());if(!/^\d{4}\/\d{2}\/\d{2}$/.test(date)||+date.slice(5,7)<1||+date.slice(5,7)>12)return toast("تاریخ را به شکل 1405/09/06 وارد کنید");
+function reset(){["name","age","block","loc","injury","cause","desc","svc"].forEach(i=>$(i).value="");$("date").value=today();const n=new Date();$("time").value=p2(n.getHours())+":"+p2(n.getMinutes());$("mrows").innerHTML="";addMr();bg()}
+function bg(){$("bg").textContent=fa(R.length)}
+function save(){const date=$("date").value;if(!date)return toast("تاریخ را انتخاب کنید");
 if(!$("name").value.trim())return toast("نام و نام خانوادگی الزامی است");
 const mats=[...$("mrows").children].map(r=>({n:r.children[0].value,q:+r.children[1].value})).filter(m=>m.n||m.q);
 if(mats.some(m=>!m.n||!(m.q>0)))return toast("برای هر ماده، نام و تعداد (بزرگ‌تر از صفر) وارد کنید");
 R.push({id:Date.now(),date,time:$("time").value,name:$("name").value.trim(),age:$("age").value,block:$("block").value,loc:$("loc").value,injury:$("injury").value,cause:$("cause").value,desc:$("desc").value,svc:$("svc").value,mats});
-st.set("recs",R);toast("✔ مراجعه ذخیره شد");reset()}
+st.set("recs",R);toast("✔ مراجعه ذخیره شد");reset();scrollTo(0,0)}
 function list(){const q=$("q").value.trim(),a=R.slice().reverse().filter(r=>!q||[r.name,r.injury,r.cause,r.block,r.loc].join(" ").includes(q));
-$("recs").innerHTML=a.map(r=>`<div class="rec"><b>${esc(r.name)}</b> <span style="color:var(--mut)">${esc(r.age?r.age+" ساله":"")}</span><p>${esc(r.date)} – ${esc(r.time)} | ${esc(r.block)} ${esc(r.loc)}</p><p>${esc(r.injury)} ← ${esc(r.cause)}</p><p>خدمات: ${esc(r.svc)} | مواد: ${esc(r.mats.map(m=>m.n+" ×"+m.q).join("، ")||"—")}</p><button class="d" onclick="del(${r.id})">حذف</button></div>`).join("")||"<p>مورد ثبت‌شده‌ای نیست.</p>"}
-function del(id){if(!confirm("این مراجعه حذف شود؟"))return;R=R.filter(r=>r.id!=id);st.set("recs",R);list()}
+$("recs").innerHTML=a.map(r=>`<div class="rec"><b>${esc(r.name)}</b> <span style="color:var(--mut)">${esc(r.age?fa(r.age)+" ساله":"")}</span><p>${fa(esc(r.date))} – ${fa(esc(r.time))} | ${esc(r.block)} ${esc(r.loc)}</p><div><span class="chip">${esc(r.injury||"—")}</span><span class="chip">${esc(r.cause||"—")}</span></div><p>خدمات: ${esc(r.svc||"—")}</p><p>مواد: ${esc(r.mats.map(m=>m.n+" ×"+m.q).join("، ")||"—")}</p><button class="d" onclick="del(${r.id})">حذف</button></div>`).join("")||"<p style='color:var(--mut)'>مورد ثبت‌شده‌ای نیست.</p>"}
+function del(id){if(!confirm("این مراجعه حذف شود؟"))return;R=R.filter(r=>r.id!=id);st.set("recs",R);bg();list()}
 function addMat(){const n=$("mn").value.trim();if(!n)return;if(M.some(m=>m[0]==n))return toast("نام تکراری است");M.push([n,$("mu").value.trim()]);st.set("mats",M);$("mn").value=$("mu").value="";mats()}
-function mats(){$("mats").innerHTML=M.map((m,i)=>`<div class="rec" style="display:flex;justify-content:space-between;align-items:center;margin:4px 0"><span>${esc(m[0])} <small style="color:var(--mut)">(${esc(m[1])})</small></span><button class="d" onclick="M.splice(${i},1);st.set('mats',M);mats()">حذف</button></div>`).join("");
+function mats(){$("mats").innerHTML=M.map((m,i)=>`<div class="rec" style="display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:6px 12px"><span>${esc(m[0])} <small style="color:var(--mut)">(${esc(m[1])})</small></span><button class="d" onclick="M.splice(${i},1);st.set('mats',M);mats()">حذف</button></div>`).join("");
 $("lists").innerHTML=Object.keys(LN).map(k=>`<label>${LN[k]}</label><textarea rows="4" onchange="L['${k}']=this.value.split('\\n').map(x=>x.trim()).filter(Boolean);st.set('lists',L);dls()">${esc(L[k].join("\n"))}</textarea>`).join("")}
 function per(){const y=$("ry").value,m=$("rm").value;return R.filter(r=>r.date.slice(0,4)==y&&+r.date.slice(5,7)==+m)}
 function sum(){const o={};per().forEach(r=>{const seen=new Set();r.mats.forEach(x=>{o[x.n]=o[x.n]||{q:0,v:0,w:[]};o[x.n].q+=x.q;if(!seen.has(x.n)){o[x.n].v++;seen.add(x.n)}o[x.n].w.push([r,x.q])})});return o}
 const unit=n=>(M.find(m=>m[0]==n)||[0,""])[1];
 function rep(){const o=sum(),p=per(),sel=window.selMat||"";
-$("rep").innerHTML=`<div class="kpi"><div><b>${p.length}</b>مراجعه در ${esc(MONTHS[$("rm").value-1])} ${esc($("ry").value)}</div><div><b>${Object.keys(o).length}</b>قلم ماده مصرفی</div></div>
+$("rep").innerHTML=`<div class="kpi"><div><b>${fa(p.length)}</b>مراجعه در ${esc(MONTHS[$("rm").value-1])} ${fa(esc($("ry").value))}</div><div><b>${fa(Object.keys(o).length)}</b>قلم ماده مصرفی</div></div>
 <div class="sc"><table><tr><th>ماده</th><th>مصرف</th><th>واحد</th><th>تعداد مراجعه</th></tr>${Object.keys(o).map(n=>`<tr onclick="selMat='${esc(n).replace(/'/g,"")}';rep()" style="cursor:pointer"><td>${esc(n)}</td><td><b>${o[n].q}</b></td><td>${esc(unit(n))}</td><td>${o[n].v}</td></tr>`).join("")||'<tr><td colspan="4">مصرفی ثبت نشده است</td></tr>'}</table></div>
 <p style="color:var(--mut);font-size:11px">برای دیدن ریز مصرف، روی نام ماده بزنید یا انتخاب کنید:</p>
-<select onchange="selMat=this.value;rep()" data-h="1"><option value="">— ماده —</option>${M.map(m=>`<option ${m[0]==sel?"selected":""}>${esc(m[0])}</option>`).join("")}</select>
-${sel&&o[sel]?`<h2 style="margin-top:12px">ریز مصرف «${esc(sel)}»: ${o[sel].q} ${esc(unit(sel))}</h2><div class="sc"><table><tr><th>نام</th><th>تاریخ</th><th>آسیب</th><th>علت</th><th>مقدار</th></tr>${o[sel].w.map(([r,q])=>`<tr><td>${esc(r.name)}</td><td>${esc(r.date)}</td><td>${esc(r.injury)}</td><td>${esc(r.cause)}</td><td>${q}</td></tr>`).join("")}</table></div>`:sel?"<p>در این ماه مصرفی نداشته است.</p>":""}`}
+<select onchange="selMat=this.value;rep()"><option value="">— ماده —</option>${M.map(m=>`<option ${m[0]==sel?"selected":""}>${esc(m[0])}</option>`).join("")}</select>
+${sel&&o[sel]?`<h2 style="margin-top:14px">ریز مصرف «${esc(sel)}»: ${o[sel].q} ${esc(unit(sel))}</h2><div class="sc"><table><tr><th>نام</th><th>تاریخ</th><th>آسیب</th><th>علت</th><th>مقدار</th></tr>${o[sel].w.map(([r,q])=>`<tr><td>${esc(r.name)}</td><td>${esc(r.date)}</td><td>${esc(r.injury)}</td><td>${esc(r.cause)}</td><td>${q}</td></tr>`).join("")}</table></div>`:sel?"<p>در این ماه مصرفی نداشته است.</p>":""}`}
 async function out(name,data){const C=window.Capacitor;
 if(C&&C.isNativePlatform&&C.isNativePlatform()){try{const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(data)});
 const w=await C.Plugins.Filesystem.writeFile({path:name,data:b64,directory:"CACHE"});
@@ -109,11 +175,11 @@ const b=[["گزارش مصرف – "+mn],["ماده","مصرف","واحد","تع
 const c=[["ماده","نام","تاریخ","آسیب","علت","مقدار","واحد"]];Object.keys(o).forEach(n=>o[n].w.forEach(([r,q])=>c.push([n,r.name,r.date,r.injury,r.cause,q,unit(n)])));
 [["ثبت مراجعات",a],["گزارش مصرف",b],["ریز مصرف",c]].forEach(([n,d])=>{const s=XLSX.utils.aoa_to_sheet(d);s["!cols"]=d[Math.min(1,d.length-1)].map(()=>({wch:20}));XLSX.utils.book_append_sheet(wb,s,n)});wb.Workbook={Views:[{RTL:true}]};
 out("FAC-firstaid-"+$("ry").value+"-"+$("rm").value+".xlsx",new Blob([XLSX.write(wb,{type:"array",bookType:"xlsx"})]))}
-async function pdf(){try{const sel=document.querySelector("#rep select");sel.style.display="none";const cv=await html2canvas($("rep"),{scale:2,backgroundColor:"#ffffff"});sel.style.display="";
-const {jsPDF}=window.jspdf,p=new jsPDF("p","mm","a4"),W=190,H=cv.height*W/cv.width,pg=270;p.setFontSize(9);let y=0;
+async function pdf(){try{const sel=document.querySelector("#rep select");sel.style.display="none";$("rep").classList.add("pdfmode");const cv=await html2canvas($("rep"),{scale:2,backgroundColor:"#ffffff"});sel.style.display="";$("rep").classList.remove("pdfmode");
+const {jsPDF}=window.jspdf,p=new jsPDF("p","mm","a4"),W=190,H=cv.height*W/cv.width,pg=270;let y=0;
 while(y<H){const sh=Math.min(pg,H-y),s=document.createElement("canvas");s.width=cv.width;s.height=sh*cv.width/W;s.getContext("2d").drawImage(cv,0,y*cv.width/W,cv.width,s.height,0,0,cv.width,s.height);p.addImage(s.toDataURL("image/jpeg",.92),"JPEG",10,12,W,sh);y+=pg;if(y<H)p.addPage()}
 out("FAC-firstaid-report-"+$("ry").value+"-"+$("rm").value+".pdf",p.output("blob"))}catch(e){toast("خطا در ساخت PDF")}}
-(function init(){const y=+today().slice(0,4);$("ry").innerHTML=[y-1,y,y+1].map(v=>`<option ${v==y?"selected":""}>${v}</option>`).join("");
-$("rm").innerHTML=MONTHS.map((m,i)=>`<option value="${i+1}" ${i+1==+today().slice(5,7)?"selected":""}>${m}</option>`).join("");dls();mats();reset()})();
+(function init(){const t=today(),y=+t.slice(0,4);$("ry").innerHTML=[y-1,y,y+1].map(v=>`<option ${v==y?"selected":""}>${v}</option>`).join("");
+$("rm").innerHTML=MONTHS.map((m,i)=>`<option value="${i+1}" ${i+1==+t.slice(5,7)?"selected":""}>${m}</option>`).join("");dls();mats();reset()})();
 if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script></body></html>
