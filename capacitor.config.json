@@ -1,0 +1,6 @@
+{
+  "appId": "ir.hse.facfirstaid",
+  "appName": "بهداری FAC",
+  "webDir": "www",
+  "android": { "allowMixedContent": false }
+}
