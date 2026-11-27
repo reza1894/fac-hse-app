@@ -5,7 +5,7 @@
 <title>بهداری FAC – ثبت مراجعات HSE</title>
 <style>
 :root{box-sizing:border-box;--bg:#eef3f2;--card:#fff;--tx:#14201e;--mut:#5d6f6b;--pri:#0f5c4d;--pri2:#0a3d33;--acc:#f2a900;--bd:#d3dedb;--ok:#e3f1ee;--bad:#c0392b;--fld:#f6faf9;--sh:0 2px 10px rgba(10,61,51,.08)}
-@media (prefers-color-scheme:dark){:root{--bg:#0e1716;--card:#162321;--tx:#e6efed;--mut:#93a8a3;--pri:#2fa88f;--pri2:#0a3d33;--bd:#2b3f3b;--ok:#1b3a35;--fld:#0f1b19;--sh:none}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1716;--card:#162321;--tx:#e6efed;--mut:#93a8a3;--pri:#2fa88f;--pri2:#0a3d33;--bd:#2b3f3b;--ok:#1b3a35;--fld:#0f1b19;--sh:none}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--tx);font:14px Tahoma,Arial,sans-serif}
 .top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--pri2),#0f5c4d 70%,#16806b);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--acc);box-shadow:0 3px 12px rgba(0,0,0,.18)}
@@ -58,7 +58,47 @@ th{background:var(--pri2);color:#fff;padding:8px;white-space:nowrap}td{border:1p
 .dg button.t{box-shadow:inset 0 0 0 2px var(--acc)}.dg button.sel{background:var(--pri);color:#fff;font-weight:bold}
 .dpf{display:flex;gap:8px;padding:8px 12px 12px}.dpf button{flex:1;padding:10px}
 .pdfmode{--card:#fff;--tx:#14201e;--mut:#5d6f6b;--pri:#0f5c4d;--bd:#d3dedb;--ok:#e3f1ee;--fld:#fff;color:#14201e}
-</style></head><body>
+
+/* lock */
+#lock{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(160deg,#0a3d33,#0f5c4d 60%,#16806b);color:#fff;align-items:center;justify-content:center;padding:24px;flex-direction:column;text-align:center}
+body.locked #lock{display:flex}body.locked .top,body.locked main,body.locked .drw,body.locked .ov,body.locked .dpo,body.locked .shov{display:none!important}
+#lock .logo{width:76px;height:76px;border-radius:22px;margin-bottom:16px}#lock h1{font-size:19px;margin:0 0 6px}#lock p{opacity:.85;margin:0 0 22px;font-size:12.5px}
+#lock input{max-width:300px;text-align:center;font-size:20px;letter-spacing:6px;background:#fff;color:#14201e;border-color:transparent}
+#lock button{max-width:300px;width:100%;margin-top:12px;background:var(--acc);color:#222;padding:14px;font-size:15px}
+#lerr{min-height:22px;margin-top:12px;color:#ffd0cb;font-weight:bold;font-size:13px}
+@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}.shk{animation:shk .4s}
+
+/* picker input */
+.pk{cursor:pointer;padding-left:36px;background:var(--fld) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2393a8a3' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat left 13px center}
+.shov{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:.22s;z-index:90}.shov.on{opacity:1;pointer-events:auto}
+.sh{position:absolute;bottom:0;right:0;left:0;max-width:560px;margin:auto;background:var(--card);border-radius:22px 22px 0 0;max-height:78vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.9,.3,1);padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -8px 30px rgba(0,0,0,.35)}.shov.on .sh{transform:none}
+.shg{width:42px;height:5px;border-radius:3px;background:var(--bd);margin:9px auto 2px}
+.sht{display:flex;align-items:center;justify-content:space-between;padding:4px 16px}.sht b{color:var(--pri);font-size:15px}
+.shs{padding:4px 14px 8px}.shs input{background:var(--fld)}
+.shl{overflow-y:auto;padding:0 10px 12px;-webkit-overflow-scrolling:touch}
+.opt{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:right;background:none;color:var(--tx);font-weight:normal;font-size:14.5px;padding:14px 12px;border-radius:12px;border-bottom:1px solid var(--bd);border-radius:0}
+.opt small{display:block;color:var(--mut);font-size:11px;margin-top:2px}.opt em{font-style:normal;color:var(--pri);font-weight:bold;font-size:18px}
+.opt.sel{background:var(--ok);color:var(--pri);font-weight:bold;border-radius:12px}.opt.new{color:var(--pri);font-weight:bold}.opt.clr{color:var(--bad)}.opt:active{background:var(--ok)}
+.emp{text-align:center;color:var(--mut);padding:20px}
+/* search & records */
+.srch{position:relative;margin-top:10px}.srch input{padding-right:40px;padding-left:38px;border-radius:14px}
+.srch svg{position:absolute;right:13px;top:50%;margin-top:-9px;stroke:var(--mut)}.srch button{position:absolute;left:4px;top:50%;margin-top:-17px;background:none;color:var(--mut);padding:8px 10px}
+.tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}.tools select{width:auto;padding:8px 10px;font-size:12.5px}
+.rec.hit{border-right-color:var(--acc);background:var(--ok)}.sep{font-size:11.5px;color:var(--mut);margin:14px 2px 8px;display:flex;align-items:center;gap:8px}.sep:after{content:"";flex:1;height:1px;background:var(--bd)}
+.acts{display:flex;gap:6px;margin-top:4px}.acts button{padding:6px 12px;font-size:12px}
+#eb{display:none;background:var(--ok);border:1.5px dashed var(--pri);color:var(--pri);font-weight:bold}#eb .row{align-items:center;margin-top:8px}
+/* drawer extras */
+.dx{padding:6px 14px 10px;border-top:1px solid var(--bd)}.seg{display:flex;background:var(--fld);border:1px solid var(--bd);border-radius:12px;padding:3px;gap:3px;margin:8px 0 12px}
+.seg button{flex:1;background:none;color:var(--mut);padding:8px 4px;font-size:12px;font-weight:normal;border-radius:9px}.seg button.on{background:var(--pri);color:#fff;font-weight:bold}
+.dx .lb{font-size:11px;color:var(--mut)}.ct{background:var(--ok);border-radius:14px;padding:11px 13px;font-size:12.5px;line-height:1.9}.ct b{display:block;color:var(--pri);font-size:13px;margin-bottom:2px}.ct a{color:var(--pri);font-weight:bold;text-decoration:underline;word-break:break-all;display:block;direction:ltr;text-align:right}
+.ver{margin-top:6px;font-size:9.5px;opacity:.8}
+</style></head><body class="locked"><script>try{if(localStorage.getItem("fac_auth")==="1")document.body.classList.remove("locked")}catch(e){}
+try{var _t=JSON.parse(localStorage.getItem("theme")||'"auto"'),_h=new Date().getHours();if(_t=="dark"||(_t=="auto"&&(matchMedia("(prefers-color-scheme: dark)").matches||_h>=19||_h<6)))document.documentElement.dataset.theme="dark"}catch(e){}</script>
+<div id="lock"><div class="logo"><svg width="44" height="44" viewBox="0 0 24 24"><path fill="#0f5c4d" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></div>
+<h1>بهداری FAC</h1><p>برای اولین ورود، رمز عبور را وارد کنید</p>
+<input id="lpw" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlock()">
+<button onclick="unlock()">ورود</button><div id="lerr"></div></div>
+
 <div class="top"><div class="logo"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#0f5c4d" d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></div>
 <div><h1 id="pt">ثبت مراجعه</h1><small>بهداری FAC | HSE</small></div>
 <button class="burger" aria-label="منو" onclick="drw(1)"><span></span></button></div>
@@ -70,23 +110,27 @@ th{background:var(--pri2);color:#fff;padding:8px;white-space:nowrap}td{border:1p
 <button data-v="list" data-t="سوابق مراجعات"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>سوابق مراجعات<span class="bd" id="bg">0</span></button>
 <button data-v="rep" data-t="گزارش مصرف"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>گزارش مصرف مواد</button>
 <button data-v="mat" data-t="مواد و لیست‌ها"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg>مواد و لیست‌های پایه</button></div>
-<div class="df">آسیب جزئی • کمک‌های اولیه • بدون استراحت بیش از ۱ روز</div></aside>
+<div class="dx"><div class="lb">نمایش (روشن / تاریک)</div><div class="seg" id="seg"><button data-th="auto" onclick="setTheme('auto')">خودکار</button><button data-th="light" onclick="setTheme('light')">روشن</button><button data-th="dark" onclick="setTheme('dark')">تاریک</button></div>
+<div class="ct"><b>ارتباط با سازنده</b>نام سازنده: رضا جعفری<br>آدرس ایمیل برای ارتباط:<a href="mailto:rjafari.hse@gmail.com">rjafari.hse@gmail.com</a></div></div>
+<div class="df">آسیب جزئی • کمک‌های اولیه • بدون استراحت بیش از ۱ روز<div class="ver">نسخه برنامه: <bdi>V.2.1</bdi></div></div></aside>
 
 <main>
-<section id="v-add" class="v on"><div class="card"><h2>مشخصات مراجعه‌کننده</h2><p class="sub">اطلاعات فرد و زمان مراجعه</p>
+<section id="v-add" class="v on"><div class="card" id="eb">✎ در حال ویرایش یک مراجعه ثبت‌شده<div class="row"><button class="s" onclick="cancelEdit()">انصراف از ویرایش</button></div></div><div class="card"><h2>مشخصات مراجعه‌کننده</h2><p class="sub">اطلاعات فرد و زمان مراجعه</p>
 <label>تاریخ مراجعه (شمسی)</label><div class="dwrap"><input id="date" readonly placeholder="انتخاب تاریخ" onclick="dpOpen()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
 <div class="g2"><div><label>ساعت مراجعه</label><input id="time" type="time"></div><div><label>سن</label><input id="age" type="number" inputmode="numeric"></div></div>
 <label>نام و نام خانوادگی</label><input id="name"></div>
 <div class="card"><h2>رویداد و آسیب</h2><p class="sub">محل، نوع و علت آسیب</p>
-<div class="g2"><div><label>بلوک</label><input id="block" list="dl-block"></div><div><label>محل وقوع</label><input id="loc"></div></div>
-<label>نوع آسیب</label><input id="injury" list="dl-injury"><label>علت آسیب</label><input id="cause" list="dl-cause">
+<div class="g2"><div><label>بلوک</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"></div><div><label>محل وقوع</label><input id="loc"></div></div>
+<label>نوع آسیب</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"><label>علت آسیب</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)">
 <label>شرح جزئی رویداد</label><textarea id="desc" rows="2"></textarea></div>
 <div class="card"><h2>خدمات و مواد مصرفی</h2><p class="sub">اقدامات انجام‌شده و مواد استفاده‌شده</p>
-<label>خدمات انجام شده</label><input id="svc" list="dl-svc"><label>مواد مصرفی</label><div id="mrows"></div>
+<label>خدمات انجام شده</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"><label>مواد مصرفی</label><div id="mrows"></div>
 <button class="s" style="margin-top:8px;width:100%" onclick="addMr()">＋ افزودن ماده</button></div>
-<button class="big" onclick="save()">✔ ذخیره مراجعه</button></section>
+<button class="big" id="sv" onclick="save()">✔ ذخیره مراجعه</button></section>
 
-<section id="v-list" class="v"><div class="card"><h2>سوابق مراجعات</h2><input id="q" placeholder="جستجوی نام، آسیب، بلوک…" oninput="list()" style="margin-top:8px"><div id="recs" style="margin-top:12px"></div></div></section>
+<section id="v-list" class="v"><div class="card"><h2>سوابق مراجعات</h2><div class="srch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="جستجو در تمام مراجعات…" oninput="list()"><button onclick="$('q').value='';list()">✕</button></div>
+<div class="tools"><span class="chip" id="qc"></span><select id="so" onchange="SORT=this.value;st.set('sort',SORT);list()"><option value="new">جدیدترین اول</option><option value="old">قدیمی‌ترین اول</option><option value="name">نام (الف تا ی)</option></select></div>
+<div id="recs" style="margin-top:12px"></div></div></section>
 
 <section id="v-rep" class="v"><div class="card"><h2>گزارش مصرف مواد</h2>
 <div class="g2"><div><label>سال</label><select id="ry" onchange="rep()"></select></div><div><label>ماه</label><select id="rm" onchange="rep()"></select></div></div>
@@ -101,6 +145,7 @@ th{background:var(--pri2);color:#fff;padding:8px;white-space:nowrap}td{border:1p
 <div class="dpo" id="dpo" onclick="if(event.target==this)dpClose()"><div class="dp"><div class="dpt"><small>تاریخ انتخاب‌شده</small><b id="dpv"></b></div>
 <div class="dpn"><button onclick="dpMove(-1)">›</button><select id="dpm" onchange="dp.m=+this.value;dpR()"></select><select id="dpy" onchange="dp.y=+this.value;dpR()"></select><button onclick="dpMove(1)">‹</button></div>
 <div class="dg" id="dpg"></div><div class="dpf"><button class="s" onclick="dpToday()">امروز</button><button class="s" onclick="dpClose()">انصراف</button></div></div></div>
+<div class="shov" id="shov" onclick="if(event.target==this)shClose()"><div class="sh"><div class="shg"></div><div class="sht"><b id="sht"></b><button class="d" onclick="shClose()">✕</button></div><div class="shs"><input id="shq" placeholder="جستجو…" oninput="shR()"></div><div class="shl" id="shl"></div></div></div>
 <div class="toast" id="toast"></div>
 <datalist id="dl-block"></datalist><datalist id="dl-injury"></datalist><datalist id="dl-cause"></datalist><datalist id="dl-svc"></datalist>
 <script src="lib/xlsx.full.min.js"></script>
@@ -117,6 +162,19 @@ block:["بلوک A","بلوک B","بلوک C","بلوک D","محوطه"],svc:["�
 const LN={injury:"نوع آسیب",cause:"علت آسیب",block:"بلوک",svc:"خدمات"};
 let L=st.get("lists",DEF),M=st.get("mats",[["باند پانسمان","عدد"],["گاز استریل","بسته"],["چسب زخم","عدد"],["پنبه","بسته"],["بتادین","میلی‌لیتر"],["سرم شستشو","میلی‌لیتر"],["قطره چشم تتراکایین","قطره"],["پماد سوختگی","لوله"],["آتل","عدد"],["دستکش یکبار مصرف","جفت"]]),R=st.get("recs",[]);
 function toast(t){const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)}
+/* ---- first-run password ---- */
+const PW_HASH="6dbad4fdc2428df98c9708f3d45e33c737364c3be6db0afc5047dd6bcee2a48c";
+function sha256(str){const m=unescape(encodeURIComponent(str)),H=[],K=[];let p=2,c=0;const isP=n=>{for(let i=2;i*i<=n;i++)if(n%i==0)return 0;return 1};
+while(c<64){if(isP(p)){if(c<8)H[c]=(Math.pow(p,.5)%1)*4294967296|0;K[c++]=(Math.pow(p,1/3)%1)*4294967296|0}p++}
+const l=m.length*8,n=((l+64>>9)<<4)+16,w=new Array(n).fill(0);for(let i=0;i<m.length;i++)w[i>>2]|=m.charCodeAt(i)<<(24-(i%4)*8);w[l>>5]|=0x80<<(24-l%32);w[n-1]=l;
+const rr=(v,a)=>(v>>>a)|(v<<(32-a));
+for(let j=0;j<n;j+=16){const x=w.slice(j,j+16);for(let i=16;i<64;i++){const a=x[i-15],b=x[i-2];x[i]=(x[i-16]+(rr(a,7)^rr(a,18)^(a>>>3))+x[i-7]+(rr(b,17)^rr(b,19)^(b>>>10)))|0}
+let[a,b,cc,d,e,f,g,h]=H;for(let i=0;i<64;i++){const t1=(h+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f)^(~e&g))+K[i]+x[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b)^(a&cc)^(b&cc)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=cc;cc=b;b=a;a=(t1+t2)|0}
+H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+cc)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
+return H.map(v=>(v>>>0).toString(16).padStart(8,"0")).join("")}
+function unlock(){const v=$("lpw").value.trim().replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+if(sha256(v)===PW_HASH){try{localStorage.setItem("fac_auth","1")}catch(e){}$("lerr").textContent="";$("lpw").value="";document.body.classList.remove("locked")}
+else{$("lerr").textContent="رمز عبور اشتباه است";const i=$("lpw");i.value="";i.classList.remove("shk");void i.offsetWidth;i.classList.add("shk");i.focus()}}
 /* ---- Jalali calendar ---- */
 const div=(a,b)=>Math.trunc(a/b),mod=(a,b)=>a-b*Math.trunc(a/b),BR=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];
 function jalCal(jy){let gy=jy+621,lj=-14,jp=BR[0],jump=0;for(let i=1;i<BR.length;i++){const jm=BR[i];jump=jm-jp;if(jy<jm)break;lj+=div(jump,33)*8+div(mod(jump,33),4);jp=jm}
@@ -138,19 +196,55 @@ function dpPick(i){$("date").value=dp.y+"/"+p2(dp.m)+"/"+p2(i);dpClose()}
 function dpToday(){$("date").value=today();dpClose()}
 /* ---- navigation ---- */
 function drw(o){$("drw").classList.toggle("on",!!o);$("ov").classList.toggle("on",!!o)}
-document.querySelectorAll(".dn button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".dn button").forEach(x=>x.classList.toggle("on",x==b));document.querySelectorAll(".v").forEach(v=>v.classList.toggle("on",v.id=="v-"+b.dataset.v));$("pt").textContent=b.dataset.t;if(b.dataset.v=="list")list();if(b.dataset.v=="rep")rep();drw(0);scrollTo(0,0)});
-function dls(){for(const k in LN)$("dl-"+k).innerHTML=L[k].map(x=>`<option value="${esc(x)}">`).join("")}
-function addMr(n="",q=""){const d=document.createElement("div");d.className="mr";d.innerHTML=`<select><option value="">ماده…</option>${M.map(m=>`<option ${m[0]==n?"selected":""}>${esc(m[0])}</option>`).join("")}</select><input type="number" step="any" inputmode="decimal" placeholder="تعداد" value="${q}"><button class="d" onclick="this.parentNode.remove()">✕</button>`;$("mrows").appendChild(d)}
+let editId=null,SORT=st.get("sort","new"),TM=st.get("theme","auto");
+const PT={add:"ثبت مراجعه",list:"سوابق مراجعات",rep:"گزارش مصرف",mat:"مواد و لیست‌ها"};
+function goPage(v){document.querySelectorAll(".dn button").forEach(x=>x.classList.toggle("on",x.dataset.v==v));document.querySelectorAll(".v").forEach(x=>x.classList.toggle("on",x.id=="v-"+v));$("pt").textContent=(v=="add"&&editId)?"ویرایش مراجعه":PT[v];if(v=="list")list();if(v=="rep")rep();drw(0);scrollTo(0,0)}
+document.querySelectorAll(".dn button").forEach(b=>b.onclick=()=>{if(b.dataset.v=="add"&&editId){editId=null;setEdit(false);reset()}goPage(b.dataset.v)});
+/* ---- bottom-sheet picker ---- */
+const nz=s=>String(s??"").toLowerCase().replace(/[\u064B-\u065F\u0640]/g,"").replace(/[\u064A\u0649]/g,"\u06CC").replace(/\u0643/g,"\u06A9").replace(/[\u0622\u0623\u0625]/g,"\u0627").replace(/[\u0629\u06C0]/g,"\u0647").replace(/[\u200c\u200f\u200e]/g," ").replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+let SH={items:[],shown:[],val:"",allow:false,cb:null};
+function shOpen(o){SH=Object.assign({shown:[]},o);$("sht").textContent=o.title;$("shq").value="";$("shq").placeholder=o.allow?"جستجو یا تایپ مورد جدید…":"جستجو…";shR();$("shov").classList.add("on");$("shl").scrollTop=0}
+function shClose(){$("shov").classList.remove("on")}
+function shR(){const raw=$("shq").value.trim(),q=nz(raw);SH.shown=[];let h="";
+if(SH.allow&&raw&&!SH.items.some(x=>nz(x.v)==q)){SH.shown.push({v:raw});h+=`<button class="opt new" onclick="shPick(0)">＋ استفاده از «${esc(raw)}»</button>`}
+SH.items.filter(x=>!q||nz(x.v).includes(q)).forEach(x=>{const i=SH.shown.push(x)-1,on=x.v==SH.val;h+=`<button class="opt ${on?"sel":""}" onclick="shPick(${i})"><span>${esc(x.v)}${x.s?`<small>${esc(x.s)}</small>`:""}</span>${on?"<em>✓</em>":""}</button>`});
+if(SH.allow&&SH.val&&!q)h+=`<button class="opt clr" onclick="shPick(-1)">✕ پاک کردن انتخاب</button>`;
+$("shl").innerHTML=h||'<p class="emp">موردی یافت نشد</p>'}
+function shPick(i){SH.cb(i<0?"":SH.shown[i].v);shClose()}
+const TT={block:"بلوک",injury:"نوع آسیب",cause:"علت آسیب",svc:"خدمات انجام شده"};
+function pk(el){const k=el.dataset.k;shOpen({title:TT[k],items:L[k].map(v=>({v})),val:el.value,allow:true,cb:v=>{el.value=v}})}
+function pkMat(el){shOpen({title:"انتخاب ماده",items:M.map(m=>({v:m[0],s:m[1]})),val:el.value,allow:false,cb:v=>{el.value=v}})}
+/* ---- theme ---- */
+function applyTheme(){const h=new Date().getHours(),sys=matchMedia("(prefers-color-scheme: dark)").matches,dark=TM=="dark"||(TM=="auto"&&(sys||h>=19||h<6));document.documentElement.dataset.theme=dark?"dark":"light";
+let m=document.querySelector('meta[name="theme-color"]');if(m)m.content=dark?"#0e1716":"#0a3d33";document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on",b.dataset.th==TM))}
+function setTheme(t){TM=t;st.set("theme",t);applyTheme()}
+setInterval(()=>{if(TM=="auto")applyTheme()},60000);try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(TM=="auto")applyTheme()})}catch(e){}
+function dls(){}
+function addMr(n="",q=""){const d=document.createElement("div");d.className="mr";d.innerHTML=`<input class="pk" readonly inputmode="none" placeholder="انتخاب ماده…" value="${esc(n)}" onclick="pkMat(this)"><input type="number" step="any" inputmode="decimal" placeholder="تعداد" value="${q}"><button class="d" onclick="this.parentNode.remove()">✕</button>`;$("mrows").appendChild(d)}
 function reset(){["name","age","block","loc","injury","cause","desc","svc"].forEach(i=>$(i).value="");$("date").value=today();const n=new Date();$("time").value=p2(n.getHours())+":"+p2(n.getMinutes());$("mrows").innerHTML="";addMr();bg()}
 function bg(){$("bg").textContent=fa(R.length)}
+function setEdit(on){$("eb").style.display=on?"block":"none";$("sv").textContent=on?"✔ ذخیره تغییرات":"✔ ذخیره مراجعه"}
+function fill(r){["name","age","block","loc","injury","cause","desc","svc"].forEach(i=>$(i).value=r[i]??"");$("date").value=r.date;$("time").value=r.time||"";$("mrows").innerHTML="";(r.mats&&r.mats.length?r.mats:[{n:"",q:""}]).forEach(m=>addMr(m.n,m.q))}
+function edit(id){const r=R.find(x=>x.id==id);if(!r)return;editId=id;fill(r);setEdit(true);goPage("add")}
+function cancelEdit(){editId=null;setEdit(false);reset();goPage("list")}
 function save(){const date=$("date").value;if(!date)return toast("تاریخ را انتخاب کنید");
 if(!$("name").value.trim())return toast("نام و نام خانوادگی الزامی است");
 const mats=[...$("mrows").children].map(r=>({n:r.children[0].value,q:+r.children[1].value})).filter(m=>m.n||m.q);
 if(mats.some(m=>!m.n||!(m.q>0)))return toast("برای هر ماده، نام و تعداد (بزرگ‌تر از صفر) وارد کنید");
-R.push({id:Date.now(),date,time:$("time").value,name:$("name").value.trim(),age:$("age").value,block:$("block").value,loc:$("loc").value,injury:$("injury").value,cause:$("cause").value,desc:$("desc").value,svc:$("svc").value,mats});
-st.set("recs",R);toast("✔ مراجعه ذخیره شد");reset();scrollTo(0,0)}
-function list(){const q=$("q").value.trim(),a=R.slice().reverse().filter(r=>!q||[r.name,r.injury,r.cause,r.block,r.loc].join(" ").includes(q));
-$("recs").innerHTML=a.map(r=>`<div class="rec"><b>${esc(r.name)}</b> <span style="color:var(--mut)">${esc(r.age?fa(r.age)+" ساله":"")}</span><p>${fa(esc(r.date))} – ${fa(esc(r.time))} | ${esc(r.block)} ${esc(r.loc)}</p><div><span class="chip">${esc(r.injury||"—")}</span><span class="chip">${esc(r.cause||"—")}</span></div><p>خدمات: ${esc(r.svc||"—")}</p><p>مواد: ${esc(r.mats.map(m=>m.n+" ×"+m.q).join("، ")||"—")}</p><button class="d" onclick="del(${r.id})">حذف</button></div>`).join("")||"<p style='color:var(--mut)'>مورد ثبت‌شده‌ای نیست.</p>"}
+const rec={date,time:$("time").value,name:$("name").value.trim(),age:$("age").value,block:$("block").value,loc:$("loc").value,injury:$("injury").value,cause:$("cause").value,desc:$("desc").value,svc:$("svc").value,mats};
+if(editId){R=R.map(x=>x.id==editId?Object.assign(rec,{id:editId}):x);st.set("recs",R);editId=null;setEdit(false);reset();toast("✔ تغییرات ذخیره شد");goPage("list");return}
+R.push(Object.assign({id:Date.now()},rec));st.set("recs",R);toast("✔ مراجعه ذخیره شد");reset();scrollTo(0,0)}
+function lev(a,b){const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++){d[i]=[i];for(let j=1;j<=n;j++)d[i][j]=i?0:j}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[m][n]}
+function scoreR(t,ws,nm,kws){let s=0;for(const k of kws){if(t.includes(k)){s+=3;if(ws.some(w=>w.startsWith(k)))s++;if(nm.includes(k))s+=2}else if(k.length>=4&&ws.some(w=>Math.abs(w.length-k.length)<=1&&lev(w,k)<=1))s++}return s}
+function card(r,hit){return `<div class="rec ${hit?"hit":""}"><b>${esc(r.name)}</b> <span style="color:var(--mut)">${esc(r.age?fa(r.age)+" ساله":"")}</span><p>${fa(esc(r.date))} – ${fa(esc(r.time))} | ${esc(r.block)} ${esc(r.loc)}</p><div><span class="chip">${esc(r.injury||"—")}</span><span class="chip">${esc(r.cause||"—")}</span></div><p>خدمات: ${esc(r.svc||"—")}</p><p>مواد: ${esc(r.mats.map(m=>m.n+" ×"+m.q).join("، ")||"—")}</p>${r.desc?`<p>شرح: ${esc(r.desc)}</p>`:""}<div class="acts"><button class="s" onclick="edit(${r.id})">✎ ویرایش</button><button class="d" onclick="del(${r.id})">حذف</button></div></div>`}
+function list(){const kws=nz($("q").value.trim()).split(/\s+/).filter(Boolean),key=r=>(r.date||"")+" "+(r.time||"");
+const cmp=SORT=="name"?(a,b)=>a.name.localeCompare(b.name,"fa"):SORT=="old"?(a,b)=>key(a).localeCompare(key(b))||a.id-b.id:(a,b)=>key(b).localeCompare(key(a))||b.id-a.id;
+const hit=[],rest=[];R.forEach(r=>{let s=0;if(kws.length){const t=nz([r.name,r.age,r.date,r.time,r.block,r.loc,r.injury,r.cause,r.desc,r.svc].concat(r.mats.map(m=>m.n+" "+m.q)).join(" "));s=scoreR(t,t.split(/\s+/),nz(r.name),kws)}(s>0?hit:rest).push({r,s})});
+hit.sort((a,b)=>b.s-a.s||cmp(a.r,b.r));rest.sort((a,b)=>cmp(a.r,b.r));
+$("qc").textContent=kws.length?fa(hit.length)+" مورد مرتبط یافت شد":fa(R.length)+" مراجعه";
+let h=hit.map(x=>card(x.r,1)).join("");
+if(kws.length&&rest.length)h+=`<div class="sep">${hit.length?"سایر مراجعات":"موردی مطابق جستجو یافت نشد؛ همه مراجعات:"}</div>`;
+h+=rest.map(x=>card(x.r,0)).join("");$("recs").innerHTML=h||"<p style='color:var(--mut)'>مورد ثبت‌شده‌ای نیست.</p>"}
 function del(id){if(!confirm("این مراجعه حذف شود؟"))return;R=R.filter(r=>r.id!=id);st.set("recs",R);bg();list()}
 function addMat(){const n=$("mn").value.trim();if(!n)return;if(M.some(m=>m[0]==n))return toast("نام تکراری است");M.push([n,$("mu").value.trim()]);st.set("mats",M);$("mn").value=$("mu").value="";mats()}
 function mats(){$("mats").innerHTML=M.map((m,i)=>`<div class="rec" style="display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:6px 12px"><span>${esc(m[0])} <small style="color:var(--mut)">(${esc(m[1])})</small></span><button class="d" onclick="M.splice(${i},1);st.set('mats',M);mats()">حذف</button></div>`).join("");
@@ -180,6 +274,6 @@ const {jsPDF}=window.jspdf,p=new jsPDF("p","mm","a4"),W=190,H=cv.height*W/cv.wid
 while(y<H){const sh=Math.min(pg,H-y),s=document.createElement("canvas");s.width=cv.width;s.height=sh*cv.width/W;s.getContext("2d").drawImage(cv,0,y*cv.width/W,cv.width,s.height,0,0,cv.width,s.height);p.addImage(s.toDataURL("image/jpeg",.92),"JPEG",10,12,W,sh);y+=pg;if(y<H)p.addPage()}
 out("FAC-firstaid-report-"+$("ry").value+"-"+$("rm").value+".pdf",p.output("blob"))}catch(e){toast("خطا در ساخت PDF")}}
 (function init(){const t=today(),y=+t.slice(0,4);$("ry").innerHTML=[y-1,y,y+1].map(v=>`<option ${v==y?"selected":""}>${v}</option>`).join("");
-$("rm").innerHTML=MONTHS.map((m,i)=>`<option value="${i+1}" ${i+1==+t.slice(5,7)?"selected":""}>${m}</option>`).join("");dls();mats();reset()})();
+$("rm").innerHTML=MONTHS.map((m,i)=>`<option value="${i+1}" ${i+1==+t.slice(5,7)?"selected":""}>${m}</option>`).join("");dls();mats();reset();$("so").value=SORT;applyTheme()})();
 if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script></body></html>
