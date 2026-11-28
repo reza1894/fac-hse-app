@@ -112,7 +112,7 @@ try{var _t=JSON.parse(localStorage.getItem("theme")||'"auto"'),_h=new Date().get
 <button data-v="mat" data-t="مواد و لیست‌ها"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg>مواد و لیست‌های پایه</button></div>
 <div class="dx"><div class="lb">نمایش (روشن / تاریک)</div><div class="seg" id="seg"><button data-th="auto" onclick="setTheme('auto')">خودکار</button><button data-th="light" onclick="setTheme('light')">روشن</button><button data-th="dark" onclick="setTheme('dark')">تاریک</button></div>
 <div class="ct"><b>ارتباط با سازنده</b>نام سازنده: رضا جعفری<br>آدرس ایمیل برای ارتباط:<a href="mailto:rjafari.hse@gmail.com">rjafari.hse@gmail.com</a></div></div>
-<div class="df">آسیب جزئی • کمک‌های اولیه • بدون استراحت بیش از ۱ روز<div class="ver">نسخه برنامه: <bdi>V.2.1</bdi></div></div></aside>
+<div class="df">آسیب جزئی • کمک‌های اولیه • بدون استراحت بیش از ۱ روز<div class="ver">نسخه برنامه: <bdi>V.2.2</bdi></div></div></aside>
 
 <main>
 <section id="v-add" class="v on"><div class="card" id="eb">✎ در حال ویرایش یک مراجعه ثبت‌شده<div class="row"><button class="s" onclick="cancelEdit()">انصراف از ویرایش</button></div></div><div class="card"><h2>مشخصات مراجعه‌کننده</h2><p class="sub">اطلاعات فرد و زمان مراجعه</p>
@@ -275,5 +275,17 @@ while(y<H){const sh=Math.min(pg,H-y),s=document.createElement("canvas");s.width=
 out("FAC-firstaid-report-"+$("ry").value+"-"+$("rm").value+".pdf",p.output("blob"))}catch(e){toast("خطا در ساخت PDF")}}
 (function init(){const t=today(),y=+t.slice(0,4);$("ry").innerHTML=[y-1,y,y+1].map(v=>`<option ${v==y?"selected":""}>${v}</option>`).join("");
 $("rm").innerHTML=MONTHS.map((m,i)=>`<option value="${i+1}" ${i+1==+t.slice(5,7)?"selected":""}>${m}</option>`).join("");dls();mats();reset();$("so").value=SORT;applyTheme()})();
+/* ---- back button + swipe ---- */
+let lastBack=0;const NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+function backAct(){if($("shov").classList.contains("on")){shClose();return"sheet"}
+if($("dpo").classList.contains("on")){dpClose();return"cal"}
+if($("drw").classList.contains("on")){drw(0);return"drw"}
+const n=Date.now();if(n-lastBack<2000)return"exit";lastBack=n;toast("برای خروج ۲ بار روی کلید عقب لمس کنید");return"toast"}
+if(NATIVE){try{const A=Capacitor.Plugins.App;A.addListener("backButton",()=>{if(backAct()=="exit")A.exitApp()})}catch(e){}}
+else{try{history.pushState({a:1},"");addEventListener("popstate",()=>{if(backAct()!="exit")history.pushState({a:1},"");else history.back()})}catch(e){}}
+let tx=0,ty=0,tg=false;
+document.addEventListener("touchstart",e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;tg=!e.target.closest(".sc,input,textarea,select,.dp,.sh")},{passive:true});
+document.addEventListener("touchend",e=>{if(!tg||document.body.classList.contains("locked"))return;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)<70||Math.abs(dy)>Math.abs(dx)*.6)return;
+const open=$("drw").classList.contains("on");if(!open&&dx>0&&tx<innerWidth*.4&&!$("shov").classList.contains("on")&&!$("dpo").classList.contains("on"))drw(1);else if(open&&dx<0)drw(0)},{passive:true});
 if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script></body></html>
