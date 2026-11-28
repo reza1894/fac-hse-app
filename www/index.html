@@ -120,11 +120,11 @@ try{var _t=JSON.parse(localStorage.getItem("theme")||'"auto"'),_h=new Date().get
 <div class="g2"><div><label>ساعت مراجعه</label><input id="time" type="time"></div><div><label>سن</label><input id="age" type="number" inputmode="numeric"></div></div>
 <label>نام و نام خانوادگی</label><input id="name"></div>
 <div class="card"><h2>رویداد و آسیب</h2><p class="sub">محل، نوع و علت آسیب</p>
-<div class="g2"><div><label>بلوک</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"></div><div><label>محل وقوع</label><input id="loc"></div></div>
-<label>نوع آسیب</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"><label>علت آسیب</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)">
+<div class="g2"><div><label>بلوک</label><input id="block" class="pk" readonly inputmode="none" data-k="block" placeholder="انتخاب کنید" onclick="pk(this)"></div><div><label>محل وقوع</label><input id="loc"></div></div>
+<label>نوع آسیب</label><input id="injury" class="pk" readonly inputmode="none" data-k="injury" placeholder="انتخاب کنید" onclick="pk(this)"><label>علت آسیب</label><input id="cause" class="pk" readonly inputmode="none" data-k="cause" placeholder="انتخاب کنید" onclick="pk(this)">
 <label>شرح جزئی رویداد</label><textarea id="desc" rows="2"></textarea></div>
 <div class="card"><h2>خدمات و مواد مصرفی</h2><p class="sub">اقدامات انجام‌شده و مواد استفاده‌شده</p>
-<label>خدمات انجام شده</label><input id="\1" class="pk" readonly inputmode="none" data-k="\1" placeholder="انتخاب کنید" onclick="pk(this)"><label>مواد مصرفی</label><div id="mrows"></div>
+<label>خدمات انجام شده</label><input id="svc" class="pk" readonly inputmode="none" data-k="svc" placeholder="انتخاب کنید" onclick="pk(this)"><label>مواد مصرفی</label><div id="mrows"></div>
 <button class="s" style="margin-top:8px;width:100%" onclick="addMr()">＋ افزودن ماده</button></div>
 <button class="big" id="sv" onclick="save()">✔ ذخیره مراجعه</button></section>
 
@@ -198,21 +198,21 @@ function dpToday(){$("date").value=today();dpClose()}
 function drw(o){$("drw").classList.toggle("on",!!o);$("ov").classList.toggle("on",!!o)}
 let editId=null,SORT=st.get("sort","new"),TM=st.get("theme","auto");
 const PT={add:"ثبت مراجعه",list:"سوابق مراجعات",rep:"گزارش مصرف",mat:"مواد و لیست‌ها"};
-function goPage(v){document.querySelectorAll(".dn button").forEach(x=>x.classList.toggle("on",x.dataset.v==v));document.querySelectorAll(".v").forEach(x=>x.classList.toggle("on",x.id=="v-"+v));$("pt").textContent=(v=="add"&&editId)?"ویرایش مراجعه":PT[v];if(v=="list")list();if(v=="rep")rep();drw(0);scrollTo(0,0)}
+function goPage(v){document.querySelectorAll(".dn button").forEach(x=>x.classList.toggle("on",x.dataset.v==v));document.querySelectorAll(".v").forEach(x=>x.classList.toggle("on",x.id=="v-"+v));$("pt").textContent=(v=="add"&&editId)?"ویرایش مراجعه":PT[v];if(v=="list")list();if(v=="rep")rep();if(v=="mat")mats();drw(0);scrollTo(0,0)}
 document.querySelectorAll(".dn button").forEach(b=>b.onclick=()=>{if(b.dataset.v=="add"&&editId){editId=null;setEdit(false);reset()}goPage(b.dataset.v)});
 /* ---- bottom-sheet picker ---- */
 const nz=s=>String(s??"").toLowerCase().replace(/[\u064B-\u065F\u0640]/g,"").replace(/[\u064A\u0649]/g,"\u06CC").replace(/\u0643/g,"\u06A9").replace(/[\u0622\u0623\u0625]/g,"\u0627").replace(/[\u0629\u06C0]/g,"\u0647").replace(/[\u200c\u200f\u200e]/g," ").replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
 let SH={items:[],shown:[],val:"",allow:false,cb:null};
-function shOpen(o){SH=Object.assign({shown:[]},o);$("sht").textContent=o.title;$("shq").value="";$("shq").placeholder=o.allow?"جستجو یا تایپ مورد جدید…":"جستجو…";shR();$("shov").classList.add("on");$("shl").scrollTop=0}
+function shOpen(o){SH=Object.assign({shown:[]},o);$("sht").textContent=o.title;$("shq").value="";$("shq").placeholder=o.allow?"جستجو یا تایپ برای افزودن به لیست…":"جستجو…";shR();$("shov").classList.add("on");$("shl").scrollTop=0}
 function shClose(){$("shov").classList.remove("on")}
 function shR(){const raw=$("shq").value.trim(),q=nz(raw);SH.shown=[];let h="";
-if(SH.allow&&raw&&!SH.items.some(x=>nz(x.v)==q)){SH.shown.push({v:raw});h+=`<button class="opt new" onclick="shPick(0)">＋ استفاده از «${esc(raw)}»</button>`}
+if(SH.allow&&raw&&!SH.items.some(x=>nz(x.v)==q)){SH.shown.push({v:raw,n:1});h+=`<button class="opt new" onclick="shPick(0)">＋ افزودن «${esc(raw)}» به لیست و انتخاب</button>`}
 SH.items.filter(x=>!q||nz(x.v).includes(q)).forEach(x=>{const i=SH.shown.push(x)-1,on=x.v==SH.val;h+=`<button class="opt ${on?"sel":""}" onclick="shPick(${i})"><span>${esc(x.v)}${x.s?`<small>${esc(x.s)}</small>`:""}</span>${on?"<em>✓</em>":""}</button>`});
 if(SH.allow&&SH.val&&!q)h+=`<button class="opt clr" onclick="shPick(-1)">✕ پاک کردن انتخاب</button>`;
 $("shl").innerHTML=h||'<p class="emp">موردی یافت نشد</p>'}
-function shPick(i){SH.cb(i<0?"":SH.shown[i].v);shClose()}
+function shPick(i){const x=i<0?null:SH.shown[i];if(x&&x.n&&SH.add)SH.add(x.v);SH.cb(x?x.v:"");shClose()}
 const TT={block:"بلوک",injury:"نوع آسیب",cause:"علت آسیب",svc:"خدمات انجام شده"};
-function pk(el){const k=el.dataset.k;shOpen({title:TT[k],items:L[k].map(v=>({v})),val:el.value,allow:true,cb:v=>{el.value=v}})}
+function pk(el){const k=el.dataset.k;shOpen({title:TT[k],items:L[k].map(v=>({v})),val:el.value,allow:true,add:v=>{if(!L[k].includes(v)){L[k].push(v);st.set("lists",L)}},cb:v=>{el.value=v}})}
 function pkMat(el){shOpen({title:"انتخاب ماده",items:M.map(m=>({v:m[0],s:m[1]})),val:el.value,allow:false,cb:v=>{el.value=v}})}
 /* ---- theme ---- */
 function applyTheme(){const h=new Date().getHours(),sys=matchMedia("(prefers-color-scheme: dark)").matches,dark=TM=="dark"||(TM=="auto"&&(sys||h>=19||h<6));document.documentElement.dataset.theme=dark?"dark":"light";
@@ -248,7 +248,7 @@ h+=rest.map(x=>card(x.r,0)).join("");$("recs").innerHTML=h||"<p style='color:var
 function del(id){if(!confirm("این مراجعه حذف شود؟"))return;R=R.filter(r=>r.id!=id);st.set("recs",R);bg();list()}
 function addMat(){const n=$("mn").value.trim();if(!n)return;if(M.some(m=>m[0]==n))return toast("نام تکراری است");M.push([n,$("mu").value.trim()]);st.set("mats",M);$("mn").value=$("mu").value="";mats()}
 function mats(){$("mats").innerHTML=M.map((m,i)=>`<div class="rec" style="display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:6px 12px"><span>${esc(m[0])} <small style="color:var(--mut)">(${esc(m[1])})</small></span><button class="d" onclick="M.splice(${i},1);st.set('mats',M);mats()">حذف</button></div>`).join("");
-$("lists").innerHTML=Object.keys(LN).map(k=>`<label>${LN[k]}</label><textarea rows="4" onchange="L['${k}']=this.value.split('\\n').map(x=>x.trim()).filter(Boolean);st.set('lists',L);dls()">${esc(L[k].join("\n"))}</textarea>`).join("")}
+$("lists").innerHTML=Object.keys(LN).map(k=>`<label>${LN[k]}</label><textarea rows="4" oninput="L['${k}']=this.value.split('\\n').map(x=>x.trim()).filter(Boolean);st.set('lists',L);dls()">${esc(L[k].join("\n"))}</textarea>`).join("")}
 function per(){const y=$("ry").value,m=$("rm").value;return R.filter(r=>r.date.slice(0,4)==y&&+r.date.slice(5,7)==+m)}
 function sum(){const o={};per().forEach(r=>{const seen=new Set();r.mats.forEach(x=>{o[x.n]=o[x.n]||{q:0,v:0,w:[]};o[x.n].q+=x.q;if(!seen.has(x.n)){o[x.n].v++;seen.add(x.n)}o[x.n].w.push([r,x.q])})});return o}
 const unit=n=>(M.find(m=>m[0]==n)||[0,""])[1];
